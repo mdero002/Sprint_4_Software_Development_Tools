@@ -5,7 +5,7 @@ import streamlit as st
 import plotly.express as px
 import altair as alt
 
-df = pd.read.csv('../vehicles_us.csv')
+df = pd.read_csv('../vehicles_us.csv')
 
 # Fill in missing values with the string 'unknown'
 df['paint_color'] = df['paint_color'].fillna('unknown')
