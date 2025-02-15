@@ -64,8 +64,6 @@ df['make'] = df['model'].str.split(' ', expand=True)[0]
 # Create a pivot table to calculate the average price for each color of vehicle
 pivot_table = df.pivot_table(index='paint_color', values='price', aggfunc='mean')   
 
-# Round the values in the pivot table to 2 decimal places
-pivot_table = np.round(pivot_table, 2)
 
 # Order the pivot table by price in descending order
 pivot_table = pivot_table.sort_values(by='price', ascending=False)
