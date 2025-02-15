@@ -5,7 +5,7 @@ import streamlit as st
 import plotly.express as px
 import altair as alt
 
-df = pd.read_csv('../vehicles_us.csv')
+df = pd.read_csv('vehicles_us.csv')
 
 # Fill in missing values with the string 'unknown'
 df['paint_color'] = df['paint_color'].fillna('unknown')
@@ -63,8 +63,29 @@ df['average_mileage'] = df['average_mileage'].fillna(0)
 # Create a new column for the make of the vehicle
 df['make'] = df['model'].str.split(' ', expand=True)[0]
 
+# Create a pivot table to calculate the average price for each color of vehicle
+pivot_table = df.pivot_table(index='paint_color', values='price', aggfunc='mean')   
+
+# Round the values in the pivot table to 2 decimal places
+pivot_table = np.round(pivot_table, 2)
+
+# Order the pivot table by price in descending order
+pivot_table = pivot_table.sort_values(by='price', ascending=False)
+
+
 # Streamlit code for bar graph of average price by paint color
 st.write('Average Price by Paint Color')
 fig = px.bar(pivot_table, x=pivot_table.index, y='price', color='price', labels={'price':'Average Price'})  
 st.plotly_chart(fig)
+
+show_histogram = st.checkbox("show me the histogram")
+
+if show_histogram:
+    # Create a streamlit histogram to visualize the distribution of prices
+    st.write('Distribution of Prices')
+    fig = px.histogram(df, x='price', nbins=50, labels={'price':'Price'})       
+    st.plotly_chart(fig)
+
+
+
 
