@@ -1,86 +1,61 @@
 import pandas as pd
+import numpy as np
 import streamlit as st
 import plotly.express as px
 import altair as alt
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 df = pd.read_csv('vehicles_us.csv')
 
-# Fill in missing values with the string 'unknown'
-df['paint_color'] = df['paint_color'].fillna('unknown')
 
-# Recheck the value counts for the paint_color column
-df['paint_color'].value_counts(dropna=False)
+st.header("""
+What factors affect the condition of a vehicle?
+""")
 
-# Check for missing values in the model_year column
-df['model_year'].value_counts(dropna=False)
+st.write("""
+### This application helps us to explore what factors can determine the condition a vehicle will be advertized as
+""")
 
-# Replace missing values in the model_year column with the median values for each model
-df['model_year'] = df.groupby('model')['model_year'].transform(lambda x: x.fillna(x.median()))
+# creating checkbox that allows the user to show or hide cars in good conditon within the application
+st.write("""
+###### Would you like to show or hide cars listed in good condition?
+""")
+show_good_cars = st.checkbox('Show Good Cars')
 
-# Recheck the missing values in the model_year column
-df['model_year'].value_counts(dropna=False)
-
-# Replace missing values in the cylinders column with the median values for each model
-df['cylinders'] = df.groupby('model')['cylinders'].transform(lambda x: x.fillna(x.median()))
-
-# Recheck the missing values in the cylinders column
-df['cylinders'].value_counts(dropna=False)
-
-# Replace missing values in the odometer column with the median values for each condition
-df['odometer'] = df.groupby('condition')['odometer'].transform(lambda x: x.fillna(x.median()))
-
-# Recheck the missing values in the odometer column
-df['odometer'].value_counts(dropna=False)
-
-# Change model_year, cylinders, and odometer columns to integer data type
-df['model_year'] = df['model_year'].astype('int')  
-
-df['cylinders'] = df['cylinders'].astype('int')  
-
-df['odometer'] = df['odometer'].astype('int')  
-
-# Change is_4wd column to boolean data type
-df['is_4wd'] = df['is_4wd'].astype(bool)
-
-# Change date_posted column to datetime data type
-df['date_posted'] = pd.to_datetime(df['date_posted'], format='%Y-%m-%d')
-
-# Add a new column that calculates the vehicle's age when the ad was placed
-df['vehicle_age'] = df['date_posted'].dt.year - df['model_year']
-
-# Add a new column that calculates the vehicle's average mileage per year rounded to the nearest whole number   
-df['average_mileage'] = df['odometer'] / df['vehicle_age']
-df['average_mileage'] = df['average_mileage'].round(0)
-
-# Replace values of 0 in the vehicle_age column with 1
-df['vehicle_age'] = df['vehicle_age'].replace(0, 1)
-
-# Replave missing values in the average_mileage column with 0
-df['average_mileage'] = df['average_mileage'].fillna(0)
-
-# Create a new column for the make of the vehicle
-df['make'] = df['model'].str.split(' ', expand=True)[0]
-
-# Create a pivot table to calculate the average price for each color of vehicle
-pivot_table = df.pivot_table(index='paint_color', values='price', aggfunc='mean')   
+if not show_good_cars:
+    df = df[df.condition!='good']
 
 
-# Order the pivot table by price in descending order
-pivot_table = pivot_table.sort_values(by='price', ascending=False)
 
-
-# Streamlit code for bar graph of average price by paint color
-st.write('Average Price by Paint Color')
-fig = px.bar(pivot_table, x=pivot_table.index, y='price', color='price', labels={'price':'Average Price'})  
+# Create a scatter plot to visualize the relationship between the condition of a vehicle and its price use streamlit
+st.write('Price vs. Condition')
+fig = px.scatter(df, x='price', y='condition', color='condition', labels={'price':'Price'})
 st.plotly_chart(fig)
 
-show_histogram = st.checkbox("show me the histogram")
 
-if show_histogram:
-    # Create a streamlit histogram to visualize the distribution of prices
-    st.write('Distribution of Prices')
-    fig = px.histogram(df, x='price', nbins=50, labels={'price':'Price'})       
-    st.plotly_chart(fig)
+
+
+#Create a scatter plot to visualize the relationship between the condition of a vehicle and the odometer reading
+st.write('Odometer vs. Condition')
+fig = px.scatter(df, x='odometer', y='condition', color='condition', labels={'odometer':'Odometer'})
+st.plotly_chart(fig)
+
+
+# Create a scatter plot to visualize the number of cars listed by condition
+st.write('Number of Cars Listed by Condition')
+fig = px.scatter(df, x='condition', y='price', color='condition', labels={'condition':'Condition'})
+st.plotly_chart(fig)
+
+
+
+# Create a histogram to visualize the distribution of days listed basd on the condition of the vehicle
+st.write('Distribution of Days Listed by Condition')
+fig = px.histogram(df, x='days_listed', color='condition', labels={'days_listed':'Days Listed'})
+st.plotly_chart(fig)
+
+
+
 
 
 
