@@ -53,6 +53,7 @@ Additionally, Viewers can interact with the web application by selecting to see 
 
 # Project Deployment
 The application has been configured for deployment on Render. To do this, I created a requirements.txt in the root level of the project's folder. I added the following packages:
+
     pandas===2.0.3
     scipy==1.11.1
     streamlit--1.25.0
@@ -60,6 +61,7 @@ The application has been configured for deployment on Render. To do this, I crea
     plotly==5.15.0
 
 I then created a .streamlit directory then added a config.toml file. I added the following content to the file: 
+
     [server]
     headless = true
     port = 1000
