@@ -38,21 +38,43 @@ I focused my data approach on exploring if certain factors about a vehicle could
 I also explored to see if the condition impacted the number of days the vehicle ad remained active.
 
 # Web Application Dashboard
-Using an app.py file in the root directory, I created a web application on using render. Ised plotly and streamlit for data visualization
+Using an app.py file in the root directory, I created a web application using render. I used plotly and streamlit for data visualization
 
 The web application allows viewers to:
 
   See scatterplots representing the two factors that were the most significant predictors in determining the condition of a   vehicle (price and odometer reading). 
 
-  See a scatter plot showing the number of vehicles listed in each condition.
+   See a histogram of the average day vehicles in each condition were advertised on the site. 
 
-  See a histogram of the average day vehicles in each condition were advertised on the site. 
+  See a bar graph showing the number of vehicles listed in each condition.
 
 
 Additionally, Viewers can interact with the web application by selecting to see vehicles listed in good condition (which was the most challenging condition to predict using the selected factors).
 
 # Project Deployment
-The application has been configured for deployment on Render. The necessary files, requirements.txt, and .streamlit/config.toml have been created for this purpose. You can deploy the application by following the instructions in the project description. 
+The application has been configured for deployment on Render. To do this, I created a requirements.txt in the root level of the project's folder. I added the following packages:
+    pandas===2.0.3
+    scipy==1.11.1
+    streamlit--1.25.0
+    altair==5.0.1
+    plotly==5.15.0
+
+I then created a .streamlit directory then added a config.toml file. I added the following content to the file: 
+    [server]
+    headless = true
+    port = 1000
+
+    [browser]
+    serverAddress = "0.0.0.0"
+    serverPort = 1000
+
+The configuration file was used to tell Render where to look in order to listen to my Streamlit app when hosting it on its servers. 
+
+After creating my account on Render, I created a new web service. I connected this web service to my project's GitHub repository. I configured the Render web service using the command pip install streamlit & install -r requirements.txt.
+
+I used the start command streamlit run app.py
+
+I deployed the project to Render and checked that the installation was successful and that the application was accessible using its web address. 
 
 # Website Link
 https://sprint-4-software-development-tools-x4m8.onrender.com
