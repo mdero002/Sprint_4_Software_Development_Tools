@@ -40,17 +40,22 @@ fig = px.scatter(df, x='odometer', y='condition', color='condition', labels={'od
 st.plotly_chart(fig)
 
 
-# Create a scatter plot to visualize the number of cars listed by condition
-st.write('Number of Cars Listed by Condition')
-fig = px.scatter(df, x='condition', y='price', color='condition', labels={'condition':'Condition'})
-st.plotly_chart(fig)
-
-
 
 # Create a histogram to visualize the distribution of days listed basd on the condition of the vehicle
-st.write('Distribution of Days Listed by Condition')
+st.write('Days Listed by Condition')
 fig = px.histogram(df, x='days_listed', color='condition', labels={'days_listed':'Days Listed'})
 st.plotly_chart(fig)
+
+
+# Calculate the number of vehicles listed by condition
+df['number of vehicles'] = 1
+df = df.groupby('condition').sum().reset_index()
+
+# Create a bar graph to visualize the number of cars listed by condition
+st.write('Number of Vehicles Listed by Condition')
+fig = px.bar(df, x='condition', y='number of vehicles', labels={'condition':'Condition', 'number of vehicles':'Number of Vehicles'})
+st.plotly_chart(fig)
+
 
 
 
